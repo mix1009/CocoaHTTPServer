@@ -1,5 +1,5 @@
 #import "HTTPAsyncFileResponse.h"
-#import "HTTPConnection.h"
+#import "CocoaHTTPConnection.h"
 #import "HTTPLogging.h"
 
 #import <unistd.h>
@@ -34,7 +34,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 
 @implementation HTTPAsyncFileResponse
 
-- (id)initWithFilePath:(NSString *)fpath forConnection:(HTTPConnection *)parent
+- (id)initWithFilePath:(NSString *)fpath forConnection:(CocoaHTTPConnection *)parent
 {
 	if ((self = [super init]))
 	{

@@ -1,6 +1,6 @@
-#import "HTTPServer.h"
+#import "CocoaHTTPServer.h"
 #import "GCDAsyncSocket.h"
-#import "HTTPConnection.h"
+#import "CocoaHTTPConnection.h"
 #import "WebSocket.h"
 #import "HTTPLogging.h"
 
@@ -12,7 +12,7 @@
 // Other flags: trace
 static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 
-@interface HTTPServer (PrivateAPI)
+@interface CocoaHTTPServer (PrivateAPI)
 
 - (void)unpublishBonjour;
 - (void)publishBonjour;
@@ -26,7 +26,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation HTTPServer
+@implementation CocoaHTTPServer
 
 /**
  * Standard Constructor.
@@ -39,8 +39,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 		HTTPLogTrace();
 		
 		// Setup underlying dispatch queues
-		serverQueue = dispatch_queue_create("HTTPServer", NULL);
-		connectionQueue = dispatch_queue_create("HTTPConnection", NULL);
+		serverQueue = dispatch_queue_create("CocoaHTTPServer", NULL);
+		connectionQueue = dispatch_queue_create("CocoaHTTPConnection", NULL);
 		
 		IsOnServerQueueKey = &IsOnServerQueueKey;
 		IsOnConnectionQueueKey = &IsOnConnectionQueueKey;
@@ -53,8 +53,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 		// Initialize underlying GCD based tcp socket
 		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:serverQueue];
 		
-		// Use default connection class of HTTPConnection
-		connectionClass = [HTTPConnection self];
+		// Use default connection class of CocoaHTTPConnection
+		connectionClass = [CocoaHTTPConnection self];
 		
 		// By default bind on all available interfaces, en1, wifi etc
 		interface = nil;
@@ -167,8 +167,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 /**
  * The connection class is the class that will be used to handle connections.
  * That is, when a new connection is created, an instance of this class will be intialized.
- * The default connection class is HTTPConnection.
- * If you use a different connection class, it is assumed that the class extends HTTPConnection
+ * The default connection class is CocoaHTTPConnection.
+ * If you use a different connection class, it is assumed that the class extends CocoaHTTPConnection
 **/
 - (Class)connectionClass
 {
@@ -452,7 +452,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 		{
 			// Stop all HTTP connections the server owns
 			[connectionsLock lock];
-			for (HTTPConnection *connection in connections)
+			for (CocoaHTTPConnection *connection in connections)
 			{
 				[connection stop];
 			}
@@ -546,7 +546,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_INFO; // | HTTP_LOG_FLAG_TRACE;
 
 - (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
 {
-	HTTPConnection *newConnection = (HTTPConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
+	CocoaHTTPConnection *newConnection = (CocoaHTTPConnection *)[[connectionClass alloc] initWithAsyncSocket:newSocket
 	                                                                                 configuration:[self config]];
 	[connectionsLock lock];
 	[connections addObject:newConnection];

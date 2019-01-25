@@ -1,6 +1,6 @@
 #import "GCDAsyncSocket.h"
-#import "HTTPServer.h"
-#import "HTTPConnection.h"
+#import "CocoaHTTPServer.h"
+#import "CocoaHTTPConnection.h"
 #import "HTTPMessage.h"
 #import "HTTPResponse.h"
 #import "HTTPAuthenticationRequest.h"
@@ -82,7 +82,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 // the HTTP_RESPONSE tag. For all other segments prior to the last segment use HTTP_PARTIAL_RESPONSE, or some other
 // tag of your own invention.
 
-@interface HTTPConnection (PrivateAPI)
+@interface CocoaHTTPConnection (PrivateAPI)
 - (void)startReadingRequest;
 - (void)sendResponseHeadersAndBody;
 @end
@@ -91,7 +91,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation HTTPConnection
+@implementation CocoaHTTPConnection
 
 static dispatch_queue_t recentNonceQueue;
 static NSMutableArray *recentNonces;
@@ -106,7 +106,7 @@ static NSMutableArray *recentNonces;
 	dispatch_once(&onceToken, ^{
 		
 		// Initialize class variables
-		recentNonceQueue = dispatch_queue_create("HTTPConnection-Nonce", NULL);
+		recentNonceQueue = dispatch_queue_create("CocoaHTTPConnection-Nonce", NULL);
 		recentNonces = [[NSMutableArray alloc] initWithCapacity:5];
 	});
 }
@@ -188,7 +188,7 @@ static NSMutableArray *recentNonces;
 		}
 		else
 		{
-			connectionQueue = dispatch_queue_create("HTTPConnection", NULL);
+			connectionQueue = dispatch_queue_create("CocoaHTTPConnection", NULL);
 		}
 		
 		// Take over ownership of the socket
@@ -577,8 +577,8 @@ static NSMutableArray *recentNonces;
 }
 
 /**
- * This method is called by the HTTPServer if it is asked to stop.
- * The server, in turn, invokes stop on each HTTPConnection instance.
+ * This method is called by the CocoaHTTPServer if it is asked to stop.
+ * The server, in turn, invokes stop on each CocoaHTTPConnection instance.
 **/
 - (void)stop
 {
@@ -1657,7 +1657,7 @@ static NSMutableArray *recentNonces;
 /**
  * This method is called to get a response for a request.
  * You may return any object that adopts the HTTPResponse protocol.
- * The HTTPServer comes with two such classes: HTTPFileResponse and HTTPDataResponse.
+ * The CocoaHTTPServer comes with two such classes: HTTPFileResponse and HTTPDataResponse.
  * HTTPFileResponse is a wrapper for an NSFileHandle object, and is the preferred way to send a file response.
  * HTTPDataResponse is a wrapper for an NSData object, and may be used to send a custom response.
 **/
@@ -2665,7 +2665,7 @@ static NSMutableArray *recentNonces;
 @synthesize documentRoot;
 @synthesize queue;
 
-- (id)initWithServer:(HTTPServer *)aServer documentRoot:(NSString *)aDocumentRoot
+- (id)initWithServer:(CocoaHTTPServer *)aServer documentRoot:(NSString *)aDocumentRoot
 {
 	if ((self = [super init]))
 	{
@@ -2675,7 +2675,7 @@ static NSMutableArray *recentNonces;
 	return self;
 }
 
-- (id)initWithServer:(HTTPServer *)aServer documentRoot:(NSString *)aDocumentRoot queue:(dispatch_queue_t)q
+- (id)initWithServer:(CocoaHTTPServer *)aServer documentRoot:(NSString *)aDocumentRoot queue:(dispatch_queue_t)q
 {
 	if ((self = [super init]))
 	{

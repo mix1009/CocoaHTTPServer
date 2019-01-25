@@ -1,5 +1,5 @@
 #import "HTTPDynamicFileResponse.h"
-#import "HTTPConnection.h"
+#import "CocoaHTTPConnection.h"
 #import "HTTPLogging.h"
 
 #if ! __has_feature(objc_arc)
@@ -16,7 +16,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 @implementation HTTPDynamicFileResponse
 
 - (id)initWithFilePath:(NSString *)fpath
-         forConnection:(HTTPConnection *)parent
+         forConnection:(CocoaHTTPConnection *)parent
              separator:(NSString *)separatorStr
  replacementDictionary:(NSDictionary *)dict
 {

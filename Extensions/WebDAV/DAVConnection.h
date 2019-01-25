@@ -1,6 +1,6 @@
-#import "HTTPConnection.h"
+#import "CocoaHTTPConnection.h"
 
-@interface DAVConnection : HTTPConnection {
+@interface DAVConnection : CocoaHTTPConnection {
 	id requestContentBody;
   NSOutputStream* requestContentStream;
 }

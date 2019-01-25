@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "HTTPResponse.h"
 
-@class HTTPConnection;
+@class CocoaHTTPConnection;
 
 /**
  * This is an asynchronous version of HTTPFileResponse.
@@ -13,7 +13,7 @@
 
 @interface HTTPAsyncFileResponse : NSObject <HTTPResponse>
 {	
-	HTTPConnection *connection;
+	CocoaHTTPConnection *connection;
 	
 	NSString *filePath;
 	UInt64 fileLength;
@@ -34,7 +34,7 @@
 	BOOL readSourceSuspended;
 }
 
-- (id)initWithFilePath:(NSString *)filePath forConnection:(HTTPConnection *)connection;
+- (id)initWithFilePath:(NSString *)filePath forConnection:(CocoaHTTPConnection *)connection;
 - (NSString *)filePath;
 
 @end
